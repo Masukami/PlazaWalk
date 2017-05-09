@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PlazaWalk</string>
+    <string name="scanBeacon">You are out of range</string>
+</resources>

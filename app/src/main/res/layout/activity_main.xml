@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/maingradient"
+    tools:context="com.fyp.masukami.weacon.Main">
+
+    <LinearLayout
+        android:id="@+id/upperLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:id="@+id/tvBLEinRange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/scanBeacon"
+            android:textStyle="bold"
+            android:textSize="25sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
