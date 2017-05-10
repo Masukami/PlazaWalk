@@ -5,12 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import org.w3c.dom.Text;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,12 +47,15 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         myHolder.shopLocation.setText("Location : " + current.getAddress());
 
         //load image using Glide
-        Glide.with(context).load("http://localhost/plazawalk/Advertisers/" + current.getName() + "/" + "logo.png");
+        Glide.with(context).load(current.getLogo())
+                .placeholder(R.drawable.ic_alert_box)
+                .error(R.drawable.ic_alert_box)
+                .into(myHolder.shopLogo);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return data.size();
     }
 
 }
