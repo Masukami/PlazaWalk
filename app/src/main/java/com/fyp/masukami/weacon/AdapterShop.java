@@ -47,7 +47,6 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             myHolder.shopName.setText(current.getName());
             myHolder.productName.setText(current.getProductName());
             myHolder.shopLocation.setText("Location : " + current.getAddress());
-            Log.d("AdapterShop", "Current Logo " + current.getLogo());
             Glide.with(context).load(current.getLogo())
                     .fitCenter()
                     .dontAnimate()

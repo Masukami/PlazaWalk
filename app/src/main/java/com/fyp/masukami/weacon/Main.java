@@ -1,39 +1,23 @@
 package com.fyp.masukami.weacon;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.wifi.ScanResult;
-import android.net.wifi.SupplicantState;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.SystemRequirementsChecker;
-import com.estimote.sdk.cloud.model.Color;
 import com.fyp.masukami.weacon.estimote.BeaconID;
 import com.fyp.masukami.weacon.estimote.EstimoteCloudBeaconDetails;
 import com.fyp.masukami.weacon.estimote.EstimoteCloudBeaconDetailsFactory;
 import com.fyp.masukami.weacon.estimote.ProximityContentManager;
 
-import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,13 +28,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Main extends AppCompatActivity {
 
@@ -63,6 +44,7 @@ public class Main extends AppCompatActivity {
     private BeaconManager beaconManager;
     private static final String TAG = "MainActivity";
     private ProximityContentManager proximityContentManager;
+    private String nearbies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -102,10 +84,9 @@ public class Main extends AppCompatActivity {
                 findViewById(R.id.upperLayout).setBackground(
                         background != null ? background : ContextCompat.getDrawable(getApplicationContext(), R.drawable.maingradient));
 
+                new AsyncFetch().execute();
             }
         });
-
-        new AsyncFetch().execute();
     }
 
     protected void onPause() {
