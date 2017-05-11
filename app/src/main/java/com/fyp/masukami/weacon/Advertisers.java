@@ -8,11 +8,11 @@ import android.graphics.Bitmap;
 
 public class Advertisers {
 
-    public String name, productName;
-    public String description;
-    public String address;
-    public String pathwayImage[];
-    public String logo;
+    private String name, productName;
+    private String description;
+    private String address;
+    public String[] pathwayImage = new String[12];
+    private String logo;
 
     public Advertisers() {
 

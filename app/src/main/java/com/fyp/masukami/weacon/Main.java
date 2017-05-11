@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -209,34 +210,37 @@ public class Main extends AppCompatActivity {
         protected void onPostExecute(String result) {
             //super.onPostExecute(result);
             //This method will be running on UI thread
-
             pdLoading.dismiss();
             List<Advertisers> advertisers = new ArrayList<>();
 
             try{
-                JSONArray jsonArray = new JSONArray(result);
+                JSONArray jsonArray = new JSONObject(result).getJSONArray("result");
                 //Extract data from JSON and store into ArrayList as class object
-                for(int i=0; i<jsonArray.length(); i++){
-                    JSONObject jsonData = jsonArray.getJSONObject(i);
-                    Advertisers advertisersData = new Advertisers();
-                    advertisersData.logo = jsonData.getString("logo_image");
-                    advertisersData.name = jsonData.getString("name");
-                    advertisersData.productName = jsonData.getString("product_name");
-                    advertisersData.address = jsonData.getString("address");
-                    advertisersData.description = jsonData.getString("description");
-                    advertisersData.pathwayImage[0] = jsonData.getString("pathway_image1");
-                    advertisersData.pathwayImage[1] = jsonData.getString("pathway_image2");
-                    advertisersData.pathwayImage[2] = jsonData.getString("pathway_image3");
-                    advertisersData.pathwayImage[3] = jsonData.getString("pathway_image4");
-                    advertisersData.pathwayImage[4] = jsonData.getString("pathway_image5");
-                    advertisersData.pathwayImage[5] = jsonData.getString("pathway_image6");
-                    advertisersData.pathwayImage[6] = jsonData.getString("pathway_image7");
-                    advertisersData.pathwayImage[7] = jsonData.getString("pathway_image8");
-                    advertisersData.pathwayImage[8] = jsonData.getString("pathway_image9");
-                    advertisersData.pathwayImage[9] = jsonData.getString("pathway_image10");
-                    advertisersData.pathwayImage[10] = jsonData.getString("pathway_image11");
-                    advertisersData.pathwayImage[11] = jsonData.getString("pathway_image12");
-                    advertisers.add(advertisersData);
+                if(jsonArray.length() > 0){
+                    for(int i=0; i<jsonArray.length(); i++){
+                        JSONObject jsonData = jsonArray.getJSONObject(i);
+                        Advertisers advertisersData = new Advertisers();
+                        advertisersData.setLogo(jsonData.getString("logo_image"));
+                        advertisersData.setName(jsonData.getString("name"));
+                        advertisersData.setProductName(jsonData.getString("product_name"));
+                        advertisersData.setAddress(jsonData.getString("address"));
+                        advertisersData.setDescription(jsonData.getString("description"));
+                        advertisersData.pathwayImage[0] = jsonData.getString("pathway_image1");
+                        advertisersData.pathwayImage[1] = jsonData.getString("pathway_image2");
+                        advertisersData.pathwayImage[2] = jsonData.getString("pathway_image3");
+                        advertisersData.pathwayImage[3] = jsonData.getString("pathway_image4");
+                        advertisersData.pathwayImage[4] = jsonData.getString("pathway_image5");
+                        advertisersData.pathwayImage[5] = jsonData.getString("pathway_image6");
+                        advertisersData.pathwayImage[6] = jsonData.getString("pathway_image7");
+                        advertisersData.pathwayImage[7] = jsonData.getString("pathway_image8");
+                        advertisersData.pathwayImage[8] = jsonData.getString("pathway_image9");
+                        advertisersData.pathwayImage[9] = jsonData.getString("pathway_image10");
+                        advertisersData.pathwayImage[10] = jsonData.getString("pathway_image11");
+                        advertisersData.pathwayImage[11] = jsonData.getString("pathway_image12");
+                        advertisers.add(advertisersData);
+                    }
+                }else {
+                    Log.d("JSON Size ", "JSON Array is 0");
                 }
 
                 //Setup and handover data to recyclerview

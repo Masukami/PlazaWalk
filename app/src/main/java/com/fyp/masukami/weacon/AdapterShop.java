@@ -2,6 +2,7 @@ package com.fyp.masukami.weacon;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,16 +42,20 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         AdapterHolder myHolder = (AdapterHolder) holder;
-        Advertisers current = data.get(position);
-        myHolder.shopName.setText(current.getName());
-        myHolder.productName.setText(current.getProductName());
-        myHolder.shopLocation.setText("Location : " + current.getAddress());
+        if(!data.isEmpty()){
+            Advertisers current = data.get(position);
+            myHolder.shopName.setText(current.getName());
+            myHolder.productName.setText(current.getProductName());
+            myHolder.shopLocation.setText("Location : " + current.getAddress());
+            Log.d("AdapterShop", "Current Logo " + current.getLogo());
+            Glide.with(context).load(current.getLogo())
+                    .placeholder(R.drawable.ic_alert_box)
+                    .error(R.drawable.ic_alert_box)
+                    .into(myHolder.shopLogo);
+        }else{
+            Log.d("AdapterShop", "Advertisers data is empty");
+        }
 
-        //load image using Glide
-        Glide.with(context).load(current.getLogo())
-                .placeholder(R.drawable.ic_alert_box)
-                .error(R.drawable.ic_alert_box)
-                .into(myHolder.shopLogo);
     }
 
     @Override

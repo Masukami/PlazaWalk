@@ -16,8 +16,9 @@ public class AdapterHolder extends RecyclerView.ViewHolder {
 
         public AdapterHolder(View itemView) {
             super(itemView);
-            shopName = (TextView) itemView.findViewById(R.id.tvShopName);
+            shopName = (TextView) itemView.findViewById(R.id.tvName);
             productName = (TextView) itemView.findViewById(R.id.tvProductName);
             shopLocation = (TextView) itemView.findViewById(R.id.tvLocation);
+            shopLogo = (ImageView) itemView.findViewById(R.id.ivLogo);
         }
 }

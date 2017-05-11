@@ -106,8 +106,6 @@ public class NearestBeaconManager {
                 nearestBeaconsDistance = distance;
             }
         }
-
-        Log.d(TAG, "Nearest beacon: " + nearestBeacon + ", distance: " + nearestBeaconsDistance);
         return nearestBeacon;
     }
 }
