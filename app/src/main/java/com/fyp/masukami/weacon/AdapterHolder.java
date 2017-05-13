@@ -9,7 +9,7 @@ import android.widget.TextView;
  * Created by Suhail on 5/9/2017.
  */
 
-public class AdapterHolder extends RecyclerView.ViewHolder {
+public class AdapterHolder extends RecyclerView.ViewHolder{
 
         TextView shopName, productName, shopLocation;
         ImageView shopLogo;
@@ -21,4 +21,5 @@ public class AdapterHolder extends RecyclerView.ViewHolder {
             shopLocation = (TextView) itemView.findViewById(R.id.tvLocation);
             shopLogo = (ImageView) itemView.findViewById(R.id.ivLogo);
         }
+
 }

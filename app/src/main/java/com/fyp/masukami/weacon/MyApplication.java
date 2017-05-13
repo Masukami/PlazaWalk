@@ -2,7 +2,11 @@ package com.fyp.masukami.weacon;
 
 import android.app.Application;
 
+import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
+import com.estimote.sdk.Region;
+
+import java.util.UUID;
 
 /**
  * Created by Suhail on 5/5/2017.

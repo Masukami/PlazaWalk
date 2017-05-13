@@ -2,11 +2,13 @@ package com.fyp.masukami.weacon;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by Suhail on 5/7/2017.
  */
 
-public class Advertisers {
+public class Advertisers implements Serializable{
 
     private String name, productName;
     private String description;

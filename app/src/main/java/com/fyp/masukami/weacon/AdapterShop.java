@@ -23,7 +23,7 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     List<Advertisers> data = Collections.emptyList();
     Advertisers current;
     int currentPos = 0;
-
+    private final String ipAddress = "http://192.168.1.176/";
     //Create constructor to initialize context and data sent from Main Activity
 
     public AdapterShop(Context context, List<Advertisers> data){
@@ -47,7 +47,7 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             myHolder.shopName.setText(current.getName());
             myHolder.productName.setText(current.getProductName());
             myHolder.shopLocation.setText("Location : " + current.getAddress());
-            Glide.with(context).load(current.getLogo())
+            Glide.with(context).load(ipAddress + current.getLogo())
                     .fitCenter()
                     .dontAnimate()
                     .placeholder(R.drawable.ic_alert_box)
