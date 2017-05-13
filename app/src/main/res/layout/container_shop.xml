@@ -20,9 +20,10 @@
             android:padding="10dp">
 
             <ImageView
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:adjustViewBounds="true"
                 android:id="@+id/ivLogo"/>
 
             <LinearLayout

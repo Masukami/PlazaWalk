@@ -48,7 +48,8 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             myHolder.productName.setText(current.getProductName());
             myHolder.shopLocation.setText("Location : " + current.getAddress());
             Glide.with(context).load(ipAddress + current.getLogo())
-                    .fitCenter()
+                    .thumbnail(0.5f)
+                    .crossFade()
                     .placeholder(R.drawable.ic_alert_box)
                     .error(R.drawable.ic_alert_box)
                     .into(myHolder.shopLogo);
