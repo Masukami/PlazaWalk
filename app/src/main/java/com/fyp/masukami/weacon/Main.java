@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -299,6 +298,7 @@ public class Main extends AppCompatActivity{
                     public void onClick(View view, int position) {
                         Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);
                         shopDetail.putExtra("advertiser", advertisers.get(position));
+                        startActivity(shopDetail);
                     }
 
                     @Override
