@@ -101,21 +101,21 @@ public class Main extends AppCompatActivity{
                     EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
                     if(beaconDetails.getBeaconName().equals("suhail-blueberry")){
                         text = "You are in" + "\nBlueberry Area";
-                        background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.blueberrygradient);
+                        //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.blueberrygradient);
                     }else if(beaconDetails.getBeaconName().equals("suhail-ice")){
                         text = "You are in" + "\nMarshmallow Area";
-                        background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icegradient);
+                        //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icegradient);
                     }else{
                         text = "You are in" + "\nMint Area";
-                        background = ContextCompat.getDrawable(getApplication(), R.drawable.mintgradient);
+                        //background = ContextCompat.getDrawable(getApplication(), R.drawable.mintgradient);
                     }
                 } else {
                     text = "You are\nOut of range";
-                    background = ContextCompat.getDrawable(getApplication(), R.drawable.maingradient);
+                    //background = ContextCompat.getDrawable(getApplication(), R.drawable.maingradient);
                 }
                 ((TextView) findViewById(R.id.tvBLEinRange)).setText(text);
-                findViewById(R.id.upperLayout).setBackground(
-                        background != null ? background : ContextCompat.getDrawable(getApplicationContext(), R.drawable.maingradient));
+//                findViewById(R.id.upperLayout).setBackground(
+//                        background != null ? background : ContextCompat.getDrawable(getApplicationContext(), R.drawable.maingradient));
 
             }
         });
