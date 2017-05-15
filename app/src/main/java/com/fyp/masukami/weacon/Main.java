@@ -48,6 +48,9 @@ public class Main extends AppCompatActivity{
     private RecyclerView nearbyStores;
     private AdapterShop shopAdapter;
     private final String ipAddress = "http://192.168.1.176/";
+    private TextView emptyList;
+    MyApplication app;
+
     //Beacon
     private BeaconManager beaconManager;
     private Region region;
@@ -84,7 +87,9 @@ public class Main extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         beaconManager = new BeaconManager(this);
-
+        app = (MyApplication) getApplication();
+        nearbyStores = (RecyclerView)findViewById(R.id.advertisersList);
+        emptyList = (TextView)findViewById(R.id.tvEmptyList);
         proximityContentManager = new ProximityContentManager(this,
                 Arrays.asList(
                         new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827),
@@ -98,6 +103,8 @@ public class Main extends AppCompatActivity{
                 String text = "";
                 Drawable background;
                 if (content != null) {
+                    nearbyStores.setVisibility(View.VISIBLE);
+                    emptyList.setVisibility(View.GONE);
                     EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
                     if(beaconDetails.getBeaconName().equals("suhail-blueberry")){
                         text = "You are in" + "\nBlueberry Area";
@@ -111,6 +118,8 @@ public class Main extends AppCompatActivity{
                     }
                 } else {
                     text = "You are\nOut of range";
+                    nearbyStores.setVisibility(View.GONE);
+                    emptyList.setVisibility(View.VISIBLE);
                     //background = ContextCompat.getDrawable(getApplication(), R.drawable.maingradient);
                 }
                 ((TextView) findViewById(R.id.tvBLEinRange)).setText(text);
@@ -128,21 +137,24 @@ public class Main extends AppCompatActivity{
                     List<String> places = placesNearBeacon(nearestBeacon);
                     if(nearbies.isEmpty()){
                         nearbies = places;
+                        app.enableBeaconNotifications(nearestBeacon.getMajor(), nearestBeacon.getMinor(), places);
                         new AsyncFetch().execute();
                     }else if(!nearbies.equals(places)){
                         nearbies = places;
+                        app.enableBeaconNotifications(nearestBeacon.getMajor(), nearestBeacon.getMinor(), places);
                         new AsyncFetch().execute();
                     }
                 }
             }
         });
+
         region = new Region("ranged region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
     }
 
     protected void onPause() {
         Log.d(TAG, "Stopping ProximityContentManager content updates");
         proximityContentManager.stopContentUpdates();
-        beaconManager.stopRanging(region);
+        //beaconManager.stopRanging(region);
         super.onPause();
     }
 
@@ -155,12 +167,14 @@ public class Main extends AppCompatActivity{
 
     protected void onResume() {
         super.onResume();
+        app = (MyApplication) getApplication();
         if (!SystemRequirementsChecker.checkWithDefaultDialogs(this)) {
             Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met");
             Log.e(TAG, "Read more about what's required at: http://estimote.github.io/Android-SDK/JavaDocs/com/estimote/sdk/SystemRequirementsChecker.html");
             Log.e(TAG, "If this is fixable, you should see a popup on the app's screen right now, asking to enable what's necessary");
-        } else {
+        } else if (!app.isBeaconNotificationsEnabled()) {
             Log.d(TAG, "Starting ProximityContentManager content updates");
+            //app.enableBeaconNotifications();
             proximityContentManager.startContentUpdates();
         }
         beaconManager.connect(new BeaconManager.ServiceReadyCallback(){
@@ -180,6 +194,7 @@ public class Main extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
     }
+
 
     public class AsyncFetch extends AsyncTask<String, String, String> {
 
@@ -289,7 +304,6 @@ public class Main extends AppCompatActivity{
                 }
 
                 //Setup and handover data to recyclerview
-                nearbyStores = (RecyclerView)findViewById(R.id.advertisersList);
                 shopAdapter = new AdapterShop(Main.this, advertisers);
                 nearbyStores.setAdapter(shopAdapter);
                 nearbyStores.setLayoutManager(new LinearLayoutManager(Main.this));

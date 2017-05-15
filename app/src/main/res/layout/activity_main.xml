@@ -61,6 +61,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                android:layout_margin="10dp"
+                android:id="@+id/tvEmptyList"
+                android:textSize="15sp"
+                android:textColor="#989898"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No stores nearby" />
+
             <View
                 android:id="@+id/viewLayout2"
                 android:layout_margin="15dp"
@@ -87,6 +98,17 @@
                 android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_margin="10dp"
+                android:id="@+id/tvEmptyList2"
+                android:textSize="15sp"
+                android:textColor="#989898"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No stores nearby" />
 
         </LinearLayout>
     </ScrollView>

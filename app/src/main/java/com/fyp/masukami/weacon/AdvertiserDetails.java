@@ -58,4 +58,11 @@ public class AdvertiserDetails extends AppCompatActivity{
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent backToMain = new Intent(this, Main.class);
+        startActivity(backToMain);
+        finish();
+    }
 }
