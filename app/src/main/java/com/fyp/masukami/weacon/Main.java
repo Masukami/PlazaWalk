@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +46,7 @@ public class Main extends AppCompatActivity{
     public static final int READ_TIMEOUT = 15000;
     private RecyclerView nearbyStores;
     private AdapterShop shopAdapter;
-    private final String ipAddress = "http://192.168.1.176/";
+    private final String ipAddress = "http://172.20.10.4/";
     private TextView emptyList;
     MyApplication app;
 
@@ -170,8 +169,6 @@ public class Main extends AppCompatActivity{
         app = (MyApplication) getApplication();
         if (!SystemRequirementsChecker.checkWithDefaultDialogs(this)) {
             Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met");
-            Log.e(TAG, "Read more about what's required at: http://estimote.github.io/Android-SDK/JavaDocs/com/estimote/sdk/SystemRequirementsChecker.html");
-            Log.e(TAG, "If this is fixable, you should see a popup on the app's screen right now, asking to enable what's necessary");
         } else if (!app.isBeaconNotificationsEnabled()) {
             Log.d(TAG, "Starting ProximityContentManager content updates");
             //app.enableBeaconNotifications();
@@ -308,6 +305,7 @@ public class Main extends AppCompatActivity{
                 nearbyStores.setAdapter(shopAdapter);
                 nearbyStores.setLayoutManager(new LinearLayoutManager(Main.this));
                 nearbyStores.addOnItemTouchListener(new CustomRVItemTouchListener(Main.this, nearbyStores, new RecyclerViewItemClickListener() {
+
                     @Override
                     public void onClick(View view, int position) {
                         Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);

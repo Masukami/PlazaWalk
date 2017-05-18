@@ -23,7 +23,7 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     List<Advertisers> data = Collections.emptyList();
     Advertisers current;
     int currentPos = 0;
-    private final String ipAddress = "http://192.168.1.176/";
+    private final String ipAddress = "http://172.20.10.4/";
     //Create constructor to initialize context and data sent from Main Activity
 
     public AdapterShop(Context context, List<Advertisers> data){

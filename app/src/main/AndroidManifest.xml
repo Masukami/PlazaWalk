@@ -21,6 +21,9 @@
         <activity android:name=".AdvertiserDetails">
 
         </activity>
+        <activity android:name=".fullScreen">
+
+        </activity>
     </application>
 
 </manifest>
