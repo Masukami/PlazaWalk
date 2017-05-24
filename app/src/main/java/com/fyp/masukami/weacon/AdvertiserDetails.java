@@ -82,8 +82,6 @@ public class AdvertiserDetails extends AppCompatActivity implements View.OnClick
 
     }
 
-    private boolean zoomOut = false;
-
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.ivFloorPlan){

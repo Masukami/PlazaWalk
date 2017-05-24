@@ -137,7 +137,6 @@ public class Main extends AppCompatActivity{
                     List<String> places = placesNearBeacon(nearestBeacon);
                     if(nearbies.isEmpty() || !nearbies.equals(places)){
                         nearbies = places;
-                        app.enableBeaconNotifications(nearestBeacon.getMajor(), nearestBeacon.getMinor(), places);
                         new AsyncFetch().execute();
                     }
                     Log.d("Main", "places :" + places);
@@ -151,7 +150,7 @@ public class Main extends AppCompatActivity{
     protected void onPause() {
         Log.d(TAG, "Stopping ProximityContentManager content updates");
         proximityContentManager.stopContentUpdates();
-        //beaconManager.stopRanging(region);
+        beaconManager.stopRanging(region);
         super.onPause();
     }
 
@@ -167,9 +166,8 @@ public class Main extends AppCompatActivity{
         app = (MyApplication) getApplication();
         if (!SystemRequirementsChecker.checkWithDefaultDialogs(this)) {
             Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met");
-        } else if (!app.isBeaconNotificationsEnabled()) {
+        } else {
             Log.d(TAG, "Starting ProximityContentManager content updates");
-            //app.enableBeaconNotifications();
             proximityContentManager.startContentUpdates();
         }
         beaconManager.connect(new BeaconManager.ServiceReadyCallback(){
