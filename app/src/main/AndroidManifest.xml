@@ -21,8 +21,13 @@
         <activity android:name=".AdvertiserDetails">
 
         </activity>
-        <activity android:name=".fullScreen">
-
+        <activity
+            android:screenOrientation="landscape"
+            android:name=".fullScreen">
+        </activity>
+        <activity
+            android:screenOrientation="landscape"
+            android:name=".Directions">
         </activity>
     </application>
 

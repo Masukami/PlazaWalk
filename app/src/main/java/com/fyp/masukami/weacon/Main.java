@@ -46,7 +46,7 @@ public class Main extends AppCompatActivity{
     public static final int READ_TIMEOUT = 15000;
     private RecyclerView nearbyStores;
     private AdapterShop shopAdapter;
-    private final String ipAddress = "http://172.20.10.4/";
+    private final String ipAddress = "http://192.168.1.176/";
     private TextView emptyList;
     MyApplication app;
 
@@ -129,20 +129,18 @@ public class Main extends AppCompatActivity{
         });
 
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
-            @Override
+           ; @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
                 if(!list.isEmpty()){
                     Beacon nearestBeacon = list.get(0);
+                    Log.d("Main", "Adapter : " + shopAdapter);
                     List<String> places = placesNearBeacon(nearestBeacon);
-                    if(nearbies.isEmpty()){
-                        nearbies = places;
-                        app.enableBeaconNotifications(nearestBeacon.getMajor(), nearestBeacon.getMinor(), places);
-                        new AsyncFetch().execute();
-                    }else if(!nearbies.equals(places)){
+                    if(nearbies.isEmpty() || !nearbies.equals(places)){
                         nearbies = places;
                         app.enableBeaconNotifications(nearestBeacon.getMajor(), nearestBeacon.getMinor(), places);
                         new AsyncFetch().execute();
                     }
+                    Log.d("Main", "places :" + places);
                 }
             }
         });
