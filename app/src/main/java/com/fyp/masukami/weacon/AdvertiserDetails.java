@@ -86,7 +86,7 @@ public class AdvertiserDetails extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         if(v.getId() == R.id.ivFloorPlan){
             Intent viewFullScreen = new Intent(AdvertiserDetails.this, fullScreen.class);
-            viewFullScreen.putExtra("address", advertiser.getAddress());
+            viewFullScreen.putExtra("advertiser", advertiser);
             startActivity(viewFullScreen);
         }else if(v.getId() == R.id.btnDirection){
             Intent showDirection = new Intent(AdvertiserDetails.this, Directions.class);

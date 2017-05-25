@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +36,9 @@ public class Directions extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.directions);
 
         Intent advertiserDetails = getIntent();
@@ -73,8 +78,33 @@ public class Directions extends AppCompatActivity {
             @Override
             public void onExitedRegion(Region region) {
                 //Exit region event
+                if (region.getIdentifier().equals("Ice Beacon")){
+                    Log.d("Directions", "Exited Marshmallow Region");
+                } else if (region.getIdentifier().equals("Blueberry Beacon")){
+                    Log.d("Directions", "Exited Blueberry Region");
+                } else if (region.getIdentifier().equals("Lemon Beacon")){
+                    Log.d("Directions", "Exited Mint Region");
+                }
             }
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        beaconManager.disconnect();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                beaconManager.startMonitoring(iceRegion);
+                beaconManager.startMonitoring(blueberryRegion);
+                beaconManager.startMonitoring(lemonRegion);
+            }
+        });
+    }
 }
