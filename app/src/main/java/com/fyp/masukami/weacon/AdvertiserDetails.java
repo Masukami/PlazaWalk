@@ -1,37 +1,33 @@
 package com.fyp.masukami.weacon;
 
 import android.content.Intent;
-import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Suhail on 5/13/2017.
  */
 
-public class AdvertiserDetails extends AppCompatActivity implements View.OnClickListener{
+public class AdvertiserDetails extends AppCompatActivity implements View.OnClickListener, DescriptionFragment.OnFragmentInteractionListener,
+FloorplanFragment.OnFragmentInteractionListener{
 
     Advertisers advertiser;
-    TextView tvName, tvProduct, tvLocation, tvDescription;
+    TextView tvName, tvProduct, tvLocation;
     private final String ipAddress = "http://192.168.1.176/";
-    ImageView ivBanner, ivFloorPlan;
-    private String floor;
+    ImageView ivBanner;
     private Button btnDirection;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,18 +37,19 @@ public class AdvertiserDetails extends AppCompatActivity implements View.OnClick
         Intent advertiserDetail = getIntent();
         advertiser = (Advertisers)advertiserDetail.getSerializableExtra("advertiser");
 
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout)findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
         tvName = (TextView)findViewById(R.id.tvName);
         tvName.setText(advertiser.getName());
         tvProduct = (TextView)findViewById(R.id.tvProduct);
         tvProduct.setText(advertiser.getProductName());
         tvLocation = (TextView)findViewById(R.id.tvLocation);
         tvLocation.setText(advertiser.getAddress());
-        tvDescription = (TextView)findViewById(R.id.tvDescription);
-        tvDescription.setText(advertiser.getDescription());
         ivBanner = (ImageView)findViewById(R.id.ivBanner);
-        ivFloorPlan = (ImageView)findViewById(R.id.ivFloorPlan);
-        ivFloorPlan.setOnClickListener(this);
-        floor = advertiser.getAddress().substring(7, 13);
         btnDirection = (Button)findViewById(R.id.btnDirection);
         btnDirection.setOnClickListener(this);
 
@@ -62,36 +59,38 @@ public class AdvertiserDetails extends AppCompatActivity implements View.OnClick
                 .error(R.drawable.ic_alert_box)
                 .into(ivBanner);
 
-        if(floor.equals("First ")){
-            Glide.with(this)
-                    .load(ipAddress + "plazawalk/advertisers/firstfloor.png")
-                    .override(600,200)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL) //use this to cache
-                    .placeholder(R.drawable.ic_alert_box)
-                    .error(R.drawable.ic_alert_box)
-                    .into(ivFloorPlan);
-        }else if (floor.equals("Ground")){
-            Glide.with(this)
-                    .load(ipAddress + "plazawalk/advertisers/groundfloor.png")
-                    .override(600,200)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL) //use this to cache
-                    .placeholder(R.drawable.ic_alert_box)
-                    .error(R.drawable.ic_alert_box)
-                    .into(ivFloorPlan);
-        }
+    }
 
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        //Send data to fragments
+        Bundle bundleDesc = new Bundle();
+        bundleDesc.putString("description", advertiser.getDescription());
+        DescriptionFragment descFragment = new DescriptionFragment();
+        descFragment.setArguments(bundleDesc);
+
+        Bundle bundleAddress = new Bundle();
+        bundleAddress.putString("address", advertiser.getAddress());
+        FloorplanFragment floorplanFragment = new FloorplanFragment();
+        floorplanFragment.setArguments(bundleAddress);
+
+        adapter.addFragment(descFragment, "Description");
+        adapter.addFragment(floorplanFragment, "Floor Plan");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.ivFloorPlan){
-            Intent viewFullScreen = new Intent(AdvertiserDetails.this, fullScreen.class);
-            viewFullScreen.putExtra("advertiser", advertiser);
-            startActivity(viewFullScreen);
-        }else if(v.getId() == R.id.btnDirection){
+        if(v.getId() == R.id.btnDirection){
             Intent showDirection = new Intent(AdvertiserDetails.this, Directions.class);
             showDirection.putExtra("advertiser", advertiser);
             startActivity(showDirection);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

@@ -1,0 +1,27 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fyp.masukami.weacon.DescriptionFragment">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvDescription"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_margin="10dp"
+            android:id="@+id/tvDescription"
+            android:gravity="fill_horizontal"
+            android:textSize="15sp"
+            android:textColor="#404040"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Description" />
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

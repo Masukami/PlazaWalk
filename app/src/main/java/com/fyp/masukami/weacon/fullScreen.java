@@ -20,11 +20,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class fullScreen extends AppCompatActivity {
 
-    private ImageView ivFloorPlan, ivShopLogo;
+    private ImageView ivFloorPlan;
     private final String ipAddress = "http://192.168.1.176/";
     private String address, floor;
-    private Advertisers advertiser;
-    private TextView tvShopName, tvShopAddress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,23 +32,10 @@ public class fullScreen extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.viewimagefull);
         ivFloorPlan = (ImageView)findViewById(R.id.ivFloorPlan);
-        ivShopLogo = (ImageView)findViewById(R.id.ivShopLogo);
-        tvShopName = (TextView)findViewById(R.id.tvShopName);
-        tvShopAddress = (TextView)findViewById(R.id.tvAddress);
 
-        Intent advertiserDetails = getIntent();
-        advertiser = (Advertisers)advertiserDetails.getSerializableExtra("advertiser");
-        address = advertiser.getAddress();
+        Bundle extras = getIntent().getExtras();
+        address = extras.getString("address");
         floor = address.substring(7, 13);
-
-        Glide.with(fullScreen.this).load(ipAddress + advertiser.getLogo())
-                .thumbnail(0.5f)
-                .placeholder(R.drawable.ic_alert_box)
-                .error(R.drawable.ic_alert_box)
-                .into(ivShopLogo);
-
-        tvShopName.setText(advertiser.getName());
-        tvShopAddress.setText(advertiser.getAddress());
 
         if(floor.equals("First ")){
             Glide.with(fullScreen.this)
