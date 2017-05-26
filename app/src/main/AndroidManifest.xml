@@ -23,10 +23,6 @@
         </activity>
         <activity
             android:screenOrientation="landscape"
-            android:name=".fullScreen">
-        </activity>
-        <activity
-            android:screenOrientation="landscape"
             android:name=".Directions">
         </activity>
     </application>

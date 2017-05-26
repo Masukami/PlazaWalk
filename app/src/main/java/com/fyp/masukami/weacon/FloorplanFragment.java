@@ -1,6 +1,7 @@
 package com.fyp.masukami.weacon;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 
 public class FloorplanFragment extends Fragment {
 
@@ -19,7 +21,6 @@ public class FloorplanFragment extends Fragment {
     private final String ipAddress = "http://192.168.1.176/";
     private ImageView ivFloorPlan;
     private String address;
-
     public FloorplanFragment() {
         // Required empty public constructor
     }
@@ -57,6 +58,18 @@ public class FloorplanFragment extends Fragment {
                     .error(R.drawable.ic_alert_box)
                     .into(ivFloorPlan);
         }
+
+        final ImagePopup imagePopup = new ImagePopup(getContext());
+        imagePopup.setBackgroundColor(Color.BLACK);
+        imagePopup.setHideCloseIcon(true);
+        imagePopup.setImageOnClickClose(true);
+
+        ivFloorPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imagePopup.initiatePopup(ivFloorPlan.getDrawable());
+            }
+        });
 
         return view;
     }
