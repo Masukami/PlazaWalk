@@ -10,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.estimote.sdk.Beacon;
@@ -40,14 +43,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Main extends AppCompatActivity{
+public class Main extends AppCompatActivity {
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
     private RecyclerView nearbyStores;
+    private GridView relatedStores;
+    private GridViewAdapter gridAdapter;
     private AdapterShop shopAdapter;
-    private final String ipAddress = "http://192.168.1.176/";
     private TextView emptyList;
+    private LinearLayout relatedStoresLayout;
     MyApplication app;
 
     //Beacon
@@ -60,12 +65,12 @@ public class Main extends AppCompatActivity{
 
     static {
         Map<String, List<String>> placesByBeacons = new HashMap<>();
-        placesByBeacons.put("63797:8827", new ArrayList<String>(){{
+        placesByBeacons.put("63797:8827", new ArrayList<String>() {{
             add("Auntie Anne's Pretzels");
             add("Caring Pharmacy");
             add("Nando's");
         }});
-        placesByBeacons.put("41073:32690", new ArrayList<String>(){{
+        placesByBeacons.put("41073:32690", new ArrayList<String>() {{
             add("Auntie Anne's Pretzels");
             add("Baskin Robbins");
             add("The Body Shop");
@@ -74,7 +79,7 @@ public class Main extends AppCompatActivity{
         PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
     }
 
-    private List<String> placesNearBeacon(Beacon beacon){
+    private List<String> placesNearBeacon(Beacon beacon) {
         String beaconKey = String.format("%d:%d", beacon.getMajor(), beacon.getMinor());
         if (PLACES_BY_BEACONS.containsKey(beaconKey))
             return PLACES_BY_BEACONS.get(beaconKey);
@@ -82,13 +87,15 @@ public class Main extends AppCompatActivity{
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         beaconManager = new BeaconManager(this);
         app = (MyApplication) getApplication();
-        nearbyStores = (RecyclerView)findViewById(R.id.advertisersList);
-        emptyList = (TextView)findViewById(R.id.tvEmptyList);
+        nearbyStores = (RecyclerView) findViewById(R.id.advertisersList);
+        relatedStores = (GridView)findViewById(R.id.gridView);
+        relatedStoresLayout = (LinearLayout)findViewById(R.id.lowerLayout);
+        emptyList = (TextView) findViewById(R.id.tvEmptyList);
         proximityContentManager = new ProximityContentManager(this,
                 Arrays.asList(
                         new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827),
@@ -103,21 +110,23 @@ public class Main extends AppCompatActivity{
                 Drawable background;
                 if (content != null) {
                     nearbyStores.setVisibility(View.VISIBLE);
+                    relatedStoresLayout.setVisibility(View.VISIBLE);
                     emptyList.setVisibility(View.GONE);
                     EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
-                    if(beaconDetails.getBeaconName().equals("suhail-blueberry")){
+                    if (beaconDetails.getBeaconName().equals("suhail-blueberry")) {
                         text = "You are in" + "\nBlueberry Area";
                         //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.blueberrygradient);
-                    }else if(beaconDetails.getBeaconName().equals("suhail-ice")){
+                    } else if (beaconDetails.getBeaconName().equals("suhail-ice")) {
                         text = "You are in" + "\nMarshmallow Area";
                         //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icegradient);
-                    }else{
+                    } else {
                         text = "You are in" + "\nMint Area";
                         //background = ContextCompat.getDrawable(getApplication(), R.drawable.mintgradient);
                     }
                 } else {
                     text = "You are\nOut of range";
                     nearbyStores.setVisibility(View.GONE);
+                    relatedStoresLayout.setVisibility(View.GONE);
                     emptyList.setVisibility(View.VISIBLE);
                     //background = ContextCompat.getDrawable(getApplication(), R.drawable.maingradient);
                 }
@@ -129,17 +138,17 @@ public class Main extends AppCompatActivity{
         });
 
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
-           ; @Override
+            ;
+
+            @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                if(!list.isEmpty()){
+                if (!list.isEmpty()) {
                     Beacon nearestBeacon = list.get(0);
-                    Log.d("Main", "Adapter : " + shopAdapter);
                     List<String> places = placesNearBeacon(nearestBeacon);
-                    if(nearbies.isEmpty() || !nearbies.equals(places)){
+                    if (nearbies.isEmpty() || !nearbies.equals(places)) {
                         nearbies = places;
                         new AsyncFetch().execute();
                     }
-                    Log.d("Main", "places :" + places);
                 }
             }
         });
@@ -170,7 +179,7 @@ public class Main extends AppCompatActivity{
             Log.d(TAG, "Starting ProximityContentManager content updates");
             proximityContentManager.startContentUpdates();
         }
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback(){
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
                 beaconManager.startRanging(region);
@@ -207,27 +216,27 @@ public class Main extends AppCompatActivity{
 
         @Override
         protected String doInBackground(String... params) {
-            try{
-                url = new URL(ipAddress + "plazawalk/getAdvertisers.php");
-            } catch (MalformedURLException e){
+            try {
+                url = new URL(app.ipAddress + "plazawalk/getAdvertisers.php");
+            } catch (MalformedURLException e) {
                 Log.d("URL Error", e.toString());
                 return e.toString();
             }
-            try{
+            try {
                 //Setup HttpURLConnection class to send and receive data from php and mysql
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(READ_TIMEOUT);
                 conn.setConnectTimeout(CONNECTION_TIMEOUT);
                 conn.setRequestMethod("GET");
-            } catch (IOException e){
+            } catch (IOException e) {
                 Log.d("IO Exception", e.toString());
                 return e.toString();
             }
-            try{
+            try {
                 int response_code = conn.getResponseCode();
 
                 //Check if successful connection made
-                if (response_code == HttpURLConnection.HTTP_OK){
+                if (response_code == HttpURLConnection.HTTP_OK) {
 
                     //Read data sent from server
                     InputStream input = conn.getInputStream();
@@ -235,7 +244,7 @@ public class Main extends AppCompatActivity{
                     StringBuilder result = new StringBuilder();
                     String line;
 
-                    while((line = reader.readLine()) != null){
+                    while ((line = reader.readLine()) != null) {
                         result.append(line);
                     }
 
@@ -244,7 +253,7 @@ public class Main extends AppCompatActivity{
                 } else {
                     return ("unsuccessful");
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 Log.d("IO Exception", e.toString());
                 return e.toString();
             } finally {
@@ -258,13 +267,17 @@ public class Main extends AppCompatActivity{
             //This method will be running on UI thread
             pdLoading.dismiss();
             final List<Advertisers> advertisers = new ArrayList<>();
+            final List<Advertisers> relatedAdvertisers = new ArrayList<>();
+            final ArrayList<String> relatedProduct = new ArrayList<>();
+            final List<Advertisers> relatedReff = new ArrayList<>();
+
             String jsonName;
 
-            try{
+            try {
                 JSONArray jsonArray = new JSONObject(result).getJSONArray("result");
                 //Extract data from JSON and store into ArrayList as class object
-                if(jsonArray.length() > 0){
-                    for(int i=0; i<jsonArray.length(); i++){
+                if (jsonArray.length() > 0) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonData = jsonArray.getJSONObject(i);
                         Advertisers advertisersData = new Advertisers();
                         advertisersData.setLogo(jsonData.getString("logo_image"));
@@ -286,13 +299,32 @@ public class Main extends AppCompatActivity{
                         advertisersData.pathwayImage[10] = jsonData.getString("pathway_image11");
                         advertisersData.pathwayImage[11] = jsonData.getString("pathway_image12");
 
-                        for (int j = 0; j < nearbies.size(); j++){
-                            if(jsonName.equals(nearbies.get(j))){
+                        for (int j = 0; j < nearbies.size(); j++) {
+                            if (jsonName.equals(nearbies.get(j))) {
                                 advertisers.add(advertisersData);
+                                relatedProduct.add(advertisersData.getProductName());
+                            }
+                        }
+                        relatedReff.add(advertisersData);
+                    }
+
+                    for(int k = 0; k < relatedReff.size(); k++) {
+                        String currentProductName = relatedReff.get(k).getProductName();
+                        String currentProduct = relatedReff.get(k).getName();
+                        if(!nearbies.contains(currentProduct)){
+                            if (currentProductName.equals("Dessert") || currentProductName.equals("Bakery") || currentProductName.equals("Restaurant")) {
+                                if (relatedProduct.contains("Dessert") || relatedProduct.contains("Bakery") || relatedProduct.contains("Restaurant"))
+                                    relatedAdvertisers.add(relatedReff.get(k));
+                            } else if (currentProductName.equals("Clothing") || currentProductName.equals("Leather Goods")) {
+                                if (relatedProduct.contains("Clothing") || relatedProduct.contains("Leather Goods"))
+                                    relatedAdvertisers.add(relatedReff.get(k));
+                            } else if (currentProductName.equals("Health Suppliments") || currentProductName.equals("Convenience Shop") || currentProductName.equals("Cosmetics")) {
+                                if (relatedProduct.contains("Health Suppliments") || relatedProduct.contains("Convenience Shop") || relatedProduct.contains("Cosmetics"))
+                                    relatedAdvertisers.add(relatedReff.get(k));
                             }
                         }
                     }
-                }else {
+                } else {
                     Log.d("JSON Size ", "JSON Array is 0");
                 }
 
@@ -301,7 +333,6 @@ public class Main extends AppCompatActivity{
                 nearbyStores.setAdapter(shopAdapter);
                 nearbyStores.setLayoutManager(new LinearLayoutManager(Main.this));
                 nearbyStores.addOnItemTouchListener(new CustomRVItemTouchListener(Main.this, nearbyStores, new RecyclerViewItemClickListener() {
-
                     @Override
                     public void onClick(View view, int position) {
                         Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);
@@ -315,7 +346,21 @@ public class Main extends AppCompatActivity{
                     }
                 }));
 
-            } catch (JSONException e){
+                gridAdapter = new GridViewAdapter(Main.this, R.layout.grid_item_layout, relatedAdvertisers);
+                if(gridAdapter != null){
+                    relatedStores.setAdapter(gridAdapter);
+                    relatedStores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Advertisers relatedAdvertiser = (Advertisers) parent.getItemAtPosition(position);
+                            Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);
+                            shopDetail.putExtra("advertiser", relatedAdvertiser);
+                            startActivity(shopDetail);
+                        }
+                    });
+                }
+
+            } catch (JSONException e) {
                 Log.d("JSON Error", e.toString());
             }
         }

@@ -23,7 +23,7 @@ FloorplanFragment.OnFragmentInteractionListener{
 
     Advertisers advertiser;
     TextView tvName, tvProduct, tvLocation;
-    private final String ipAddress = "http://192.168.1.176/";
+    MyApplication app;
     ImageView ivBanner;
     private Button btnDirection;
     private TabLayout tabLayout;
@@ -33,10 +33,9 @@ FloorplanFragment.OnFragmentInteractionListener{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.advertiserdetails);
-
         Intent advertiserDetail = getIntent();
         advertiser = (Advertisers)advertiserDetail.getSerializableExtra("advertiser");
-
+        app = (MyApplication) getApplication();
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -53,7 +52,7 @@ FloorplanFragment.OnFragmentInteractionListener{
         btnDirection = (Button)findViewById(R.id.btnDirection);
         btnDirection.setOnClickListener(this);
 
-        Glide.with(this).load(ipAddress + advertiser.getLogo())
+        Glide.with(this).load(app.ipAddress + advertiser.getLogo())
                 .override(600,150)
                 .placeholder(R.drawable.ic_alert_box)
                 .error(R.drawable.ic_alert_box)

@@ -9,16 +9,11 @@
     android:background="@drawable/maingradient"
     tools:context="com.fyp.masukami.weacon.Main">
 
-
-    <ScrollView
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
         <LinearLayout
             android:id="@+id/upperLayout"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_margin="10dp"
@@ -55,8 +50,6 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/advertisersList"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -72,46 +65,48 @@
                 android:layout_height="wrap_content"
                 android:text="No stores nearby" />
 
-            <View
-                android:id="@+id/viewLayout2"
-                android:layout_margin="15dp"
-                android:layout_width="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="2dp"
-                android:background="#80FE3562"/>
-
-            <TextView
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:id="@+id/tvstoreInterest"
-                android:textSize="15sp"
-                android:textColor="#000000"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="These might interest you" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/interestList"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_margin="10dp"
-                android:id="@+id/tvEmptyList2"
-                android:textSize="15sp"
-                android:textColor="#989898"
-                android:gravity="center"
+            <LinearLayout
+                android:id="@+id/lowerLayout"
                 android:visibility="gone"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="No stores nearby" />
+                android:layout_height="wrap_content">
 
+                <View
+                    android:id="@+id/viewLayout2"
+                    android:layout_margin="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="2dp"
+                    android:background="#80FE3562"/>
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/tvstoreInterest"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="These might interest you" />
+
+                <GridView
+                    android:id="@+id/gridView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:columnWidth="100dp"
+                    android:drawSelectorOnTop="true"
+                    android:gravity="center"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="10dp"
+                    android:focusable="true"
+                    android:clickable="true"/>
+
+            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
 
 </LinearLayout>
 
