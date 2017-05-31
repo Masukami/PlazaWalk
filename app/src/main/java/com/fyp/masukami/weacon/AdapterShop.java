@@ -1,6 +1,7 @@
 package com.fyp.masukami.weacon;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private LayoutInflater inflater;
     List<Advertisers> data = Collections.emptyList();
     private final String ipAddress = "http://192.168.1.176/";
+    private Typeface SansSemiBold, SansRegular;
     //Create constructor to initialize context and data sent from Main Activity
 
     public AdapterShop(Context context, List<Advertisers> data){
@@ -34,6 +36,11 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.container_shop, parent, false);
         AdapterHolder holder = new AdapterHolder(view);
+        SansSemiBold = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/SourceSansPro-Semibold.otf");
+        SansRegular = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/SourceSansPro-Regular.otf");
+        holder.shopName.setTypeface(SansSemiBold);
+        holder.productName.setTypeface(SansRegular);
+        holder.shopLocation.setTypeface(SansRegular);
         return holder;
     }
 

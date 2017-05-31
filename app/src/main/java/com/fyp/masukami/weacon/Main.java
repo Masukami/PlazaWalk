@@ -2,6 +2,8 @@ package com.fyp.masukami.weacon;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import com.fyp.masukami.weacon.estimote.ProximityContentManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +43,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,11 +51,9 @@ public class Main extends AppCompatActivity {
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
-    private RecyclerView nearbyStores;
-    private GridView relatedStores;
-    private GridViewAdapter gridAdapter;
-    private AdapterShop shopAdapter;
-    private TextView emptyList;
+    private RecyclerView nearbyStores, relatedStores;
+    private AdapterShop shopAdapter, relatedShopAdapter;
+    private TextView emptyList, bleInRange, nearStores, interestStores;
     private LinearLayout relatedStoresLayout;
     MyApplication app;
 
@@ -93,9 +95,11 @@ public class Main extends AppCompatActivity {
         beaconManager = new BeaconManager(this);
         app = (MyApplication) getApplication();
         nearbyStores = (RecyclerView) findViewById(R.id.advertisersList);
-        relatedStores = (GridView)findViewById(R.id.gridView);
+        relatedStores = (RecyclerView) findViewById(R.id.relatedList);
         relatedStoresLayout = (LinearLayout)findViewById(R.id.lowerLayout);
         emptyList = (TextView) findViewById(R.id.tvEmptyList);
+        setFontFace();
+
         proximityContentManager = new ProximityContentManager(this,
                 Arrays.asList(
                         new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827),
@@ -154,6 +158,16 @@ public class Main extends AppCompatActivity {
         });
 
         region = new Region("ranged region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
+    }
+
+    private void setFontFace() {
+        bleInRange = (TextView) findViewById(R.id.tvBLEinRange);
+        bleInRange.setTypeface(app.BebasBold);
+        nearStores = (TextView) findViewById(R.id.tvnearStores);
+        nearStores.setTypeface(app.BebasRegular);
+        emptyList.setTypeface(app.BebasBook);
+        interestStores = (TextView) findViewById(R.id.tvstoreInterest);
+        interestStores.setTypeface(app.BebasRegular);
     }
 
     protected void onPause() {
@@ -330,13 +344,34 @@ public class Main extends AppCompatActivity {
 
                 //Setup and handover data to recyclerview
                 shopAdapter = new AdapterShop(Main.this, advertisers);
-                nearbyStores.setAdapter(shopAdapter);
-                nearbyStores.setLayoutManager(new LinearLayoutManager(Main.this));
-                nearbyStores.addOnItemTouchListener(new CustomRVItemTouchListener(Main.this, nearbyStores, new RecyclerViewItemClickListener() {
+                if(shopAdapter != null){
+                    nearbyStores.setAdapter(shopAdapter);
+                    nearbyStores.setLayoutManager(new LinearLayoutManager(Main.this));
+                    nearbyStores.addOnItemTouchListener(new CustomRVItemTouchListener(Main.this, nearbyStores, new RecyclerViewItemClickListener() {
+                        @Override
+                        public void onClick(View view, int position) {
+                            Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);
+                            shopDetail.putExtra("advertiser", advertisers.get(position));
+                            startActivity(shopDetail);
+                        }
+
+                        @Override
+                        public void onLongClick(View view, int position) {
+
+                        }
+                    }));
+                }
+
+                relatedShopAdapter = new AdapterShop(Main.this, relatedAdvertisers);
+                if(relatedShopAdapter != null){
+                    relatedStores.setAdapter(relatedShopAdapter);
+                    relatedStoresLayout.setVisibility(View.VISIBLE);
+                    relatedStores.setLayoutManager(new LinearLayoutManager(Main.this));
+                    relatedStores.addOnItemTouchListener(new CustomRVItemTouchListener(Main.this, relatedStores, new RecyclerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
                         Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);
-                        shopDetail.putExtra("advertiser", advertisers.get(position));
+                        shopDetail.putExtra("advertiser", relatedAdvertisers.get(position));
                         startActivity(shopDetail);
                     }
 
@@ -345,19 +380,6 @@ public class Main extends AppCompatActivity {
 
                     }
                 }));
-
-                gridAdapter = new GridViewAdapter(Main.this, R.layout.grid_item_layout, relatedAdvertisers);
-                if(gridAdapter != null){
-                    relatedStores.setAdapter(gridAdapter);
-                    relatedStores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Advertisers relatedAdvertiser = (Advertisers) parent.getItemAtPosition(position);
-                            Intent shopDetail = new Intent(Main.this, AdvertiserDetails.class);
-                            shopDetail.putExtra("advertiser", relatedAdvertiser);
-                            startActivity(shopDetail);
-                        }
-                    });
                 }
 
             } catch (JSONException e) {

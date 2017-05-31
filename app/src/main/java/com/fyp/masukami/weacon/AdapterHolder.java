@@ -13,6 +13,7 @@ public class AdapterHolder extends RecyclerView.ViewHolder{
 
         TextView shopName, productName, shopLocation;
         ImageView shopLogo;
+        MyApplication app;
 
         public AdapterHolder(View itemView) {
             super(itemView);

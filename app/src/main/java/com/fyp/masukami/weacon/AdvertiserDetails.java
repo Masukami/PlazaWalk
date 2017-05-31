@@ -43,10 +43,13 @@ FloorplanFragment.OnFragmentInteractionListener{
         tabLayout.setupWithViewPager(viewPager);
 
         tvName = (TextView)findViewById(R.id.tvName);
+        tvName.setTypeface(app.SansSemiBold);
         tvName.setText(advertiser.getName());
         tvProduct = (TextView)findViewById(R.id.tvProduct);
+        tvProduct.setTypeface(app.SansRegular);
         tvProduct.setText(advertiser.getProductName());
         tvLocation = (TextView)findViewById(R.id.tvLocation);
+        tvLocation.setTypeface(app.SansRegular);
         tvLocation.setText(advertiser.getAddress());
         ivBanner = (ImageView)findViewById(R.id.ivBanner);
         btnDirection = (Button)findViewById(R.id.btnDirection);

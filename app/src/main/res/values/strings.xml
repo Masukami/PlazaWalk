@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">PlazaWalk</string>
     <string name="scanBeacon">You are out of range</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="NoStores">No stores nearby</string>
+    <string name="StoresNear">Stores Near You</string>
+    <string name="InterestStore">These Might Interest You</string>
+    <string name="ShowDirection">Show Direction</string>
 </resources>
