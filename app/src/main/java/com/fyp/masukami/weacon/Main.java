@@ -2,8 +2,6 @@ package com.fyp.masukami.weacon;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +25,6 @@ import com.fyp.masukami.weacon.estimote.ProximityContentManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +38,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -174,6 +168,7 @@ public class Main extends AppCompatActivity {
         Log.d(TAG, "Stopping ProximityContentManager content updates");
         proximityContentManager.stopContentUpdates();
         beaconManager.stopRanging(region);
+        app.startMonitoring();
         super.onPause();
     }
 
@@ -187,6 +182,7 @@ public class Main extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         app = (MyApplication) getApplication();
+        app.stopMonitoring();
         if (!SystemRequirementsChecker.checkWithDefaultDialogs(this)) {
             Log.e(TAG, "Can't scan for beacons, some pre-conditions were not met");
         } else {
