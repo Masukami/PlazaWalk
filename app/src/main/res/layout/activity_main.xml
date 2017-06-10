@@ -111,6 +111,16 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btnProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:layout_margin="10dp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/roundbutton"
+                android:text="@string/ShowProduct" />
+
         </LinearLayout>
 
     </ScrollView>

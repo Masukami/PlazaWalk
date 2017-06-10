@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
@@ -53,12 +54,18 @@ public class Directions extends AppCompatActivity {
         advertiser = (Advertisers)advertiserDetails.getSerializableExtra("advertiser");
         ivDirection = (ImageView)findViewById(R.id.ivDirection);
         beaconManager = new BeaconManager(getApplicationContext());
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(ivDirection);
 
         proximityContentManager = new ProximityContentManager(this,
                 Arrays.asList(
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827), //Beacon 9
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 40116, 9175),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 41073, 32690)), //Beacon 8
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 39324, 29378),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 48201, 32369),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 56450, 55624),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 15237, 17187),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 24024, 52596),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 49483, 6190),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 41073, 32690)),
                 new EstimoteCloudBeaconDetailsFactory());
         proximityContentManager.setListener(new ProximityContentManager.Listener() {
             @Override
@@ -84,7 +91,7 @@ public class Directions extends AppCompatActivity {
                     }
                 } else {
                     Glide.with(Directions.this)
-                            .load(app.ipAddress + "plazawalk/advertisers/directionoor.png")
+                            .load(app.ipAddress + "plazawalk/advertisers/baskinrobbins/directionTest.gif")
                             .diskCacheStrategy(DiskCacheStrategy.ALL) //use this to cache
                             .placeholder(R.drawable.directionplaceholder)
                             .error(R.drawable.directionerror)

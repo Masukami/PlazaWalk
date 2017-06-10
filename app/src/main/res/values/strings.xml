@@ -5,4 +5,6 @@
     <string name="StoresNear">Stores Near You</string>
     <string name="InterestStore">These Might Interest You</string>
     <string name="ShowDirection">Show Direction</string>
+    <string name="ShowProduct">View Products</string>
+    <string name="ProductList">Products Available</string>
 </resources>

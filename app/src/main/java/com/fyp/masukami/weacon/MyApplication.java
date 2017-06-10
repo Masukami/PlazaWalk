@@ -28,7 +28,7 @@ public class MyApplication extends Application {
     private AssetManager am;
     private BeaconManager beaconManager;
     public Typeface BebasBold, BebasBook, BebasLight, BebasRegular, SansBlack, SansRegular, SansSemiBold;
-    private Region blueBerry, iceMarshmallow, lemonTart;
+    private Region blueBerry, iceMarshmallow, beetrootA, candyFlossB, candyFlossD, mintCocktailC, beetrootE, blueberryF;
 
     @Override
     public void onCreate() {
@@ -62,9 +62,15 @@ public class MyApplication extends Application {
     }
 
     private void initializeRegion() {
-        blueBerry = new Region("suhail-blueberry", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 63797, 8827);
-        iceMarshmallow = new Region("suhail-ice", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 41073, 32690);
-        lemonTart = new Region("lemon-tart", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 40116, 9175);
+        blueBerry = new Region("suhail-blueberry", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 63797, 8827); //Beacon 9
+        iceMarshmallow = new Region("suhail-ice", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 41073, 32690); //Beacon 8
+        beetrootA = new Region("Beacon A", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 39324, 29378); //Beacon 1
+        candyFlossB = new Region("Beacon B", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 48201,32369); //Beacon 3
+        mintCocktailC = new Region("Beacon C", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 56450, 55624); //Region 5
+        candyFlossD = new Region("Beacon D", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 15237, 17187); //Beacon 6
+        beetrootE = new Region("Beacon E", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 24024, 52596);//Beacon 10
+        blueberryF = new Region("Beacon F", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 49483, 6190);//Beacon11
+
 
     }
 
@@ -74,7 +80,12 @@ public class MyApplication extends Application {
             public void onServiceReady() {
                 beaconManager.stopMonitoring(blueBerry);
                 beaconManager.stopMonitoring(iceMarshmallow);
-                beaconManager.stopMonitoring(lemonTart);
+                beaconManager.stopMonitoring(beetrootA);
+                beaconManager.stopMonitoring(candyFlossB);
+                beaconManager.stopMonitoring(mintCocktailC);
+                beaconManager.stopMonitoring(candyFlossD);
+                beaconManager.stopMonitoring(beetrootE);
+                beaconManager.stopMonitoring(blueberryF);
             }
         });
     }
@@ -85,7 +96,12 @@ public class MyApplication extends Application {
             public void onServiceReady() {
                 beaconManager.startMonitoring(blueBerry);
                 beaconManager.startMonitoring(iceMarshmallow);
-                beaconManager.startMonitoring(lemonTart);
+                beaconManager.startMonitoring(beetrootA);
+                beaconManager.startMonitoring(candyFlossB);
+                beaconManager.startMonitoring(mintCocktailC);
+                beaconManager.startMonitoring(candyFlossD);
+                beaconManager.startMonitoring(beetrootE);
+                beaconManager.startMonitoring(blueberryF);
             }
         });
     }

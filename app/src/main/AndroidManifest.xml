@@ -27,6 +27,16 @@
             android:screenOrientation="landscape"
             android:name=".Directions">
         </activity>
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ProductList">
+        </activity>
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ProductShops">
+        </activity>
     </application>
 
 </manifest>

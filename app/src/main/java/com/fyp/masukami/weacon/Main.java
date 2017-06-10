@@ -10,8 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -41,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Main extends AppCompatActivity {
+public class Main extends AppCompatActivity implements View.OnClickListener{
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
@@ -49,6 +51,9 @@ public class Main extends AppCompatActivity {
     private AdapterShop shopAdapter, relatedShopAdapter;
     private TextView emptyList, bleInRange, nearStores, interestStores;
     private LinearLayout relatedStoresLayout;
+    private ArrayList<String> productList = new ArrayList<>();
+    private Button viewProduct;
+
     MyApplication app;
 
     //Beacon
@@ -62,14 +67,41 @@ public class Main extends AppCompatActivity {
     static {
         Map<String, List<String>> placesByBeacons = new HashMap<>();
         placesByBeacons.put("63797:8827", new ArrayList<String>() {{
+            add("The Body Shop");
             add("Auntie Anne's Pretzels");
-            add("Caring Pharmacy");
-            add("Nando's");
+            add("Uniqlo");
+            add("Bonia");
         }});
         placesByBeacons.put("41073:32690", new ArrayList<String>() {{
-            add("Auntie Anne's Pretzels");
             add("Baskin Robbins");
+            add("Auntie Anne's Pretzels");
             add("The Body Shop");
+        }});
+        placesByBeacons.put("39324:29378", new ArrayList<String>() {{
+            add("myNEWS.com");
+        }});
+        placesByBeacons.put("48201:32369", new ArrayList<String>(){{
+            add("Levi's");
+            add("H&M");
+        }});
+        placesByBeacons.put("56450:55624", new ArrayList<String>() {{
+            add("myNEWS.com");
+            add("H&M");
+        }});
+        placesByBeacons.put("15237:17187", new ArrayList<String>() {{
+            add("Nando's");
+            add("Caring Pharmacy");
+            add("Auntie Anne's Pretzels");
+        }});
+        placesByBeacons.put("24024:52596", new ArrayList<String>() {{
+            add("Uniqlo");
+            add("The Body Shop");
+            add("Bonia");
+        }});
+        placesByBeacons.put("49483:6190", new ArrayList<String>() {{
+            add("Bonia");
+            add("Caring Pharmacy");
+            add("Uniqlo");
         }});
         //add more with more iBeacons
         PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
@@ -92,12 +124,19 @@ public class Main extends AppCompatActivity {
         relatedStores = (RecyclerView) findViewById(R.id.relatedList);
         relatedStoresLayout = (LinearLayout)findViewById(R.id.lowerLayout);
         emptyList = (TextView) findViewById(R.id.tvEmptyList);
+        viewProduct = (Button) findViewById(R.id.btnProduct);
+        viewProduct.setOnClickListener(this);
         setFontFace();
 
         proximityContentManager = new ProximityContentManager(this,
                 Arrays.asList(
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 39324, 29378),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 48201, 32369),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 56450, 55624),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 15237, 17187),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 24024, 52596),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 49483, 6190),
                         new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 3878, 23708),
                         new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 41073, 32690)),
                 new EstimoteCloudBeaconDetailsFactory());
 
@@ -112,14 +151,24 @@ public class Main extends AppCompatActivity {
                     emptyList.setVisibility(View.GONE);
                     EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
                     if (beaconDetails.getBeaconName().equals("suhail-blueberry")) {
-                        text = "You are in" + "\nBlueberry Area";
+                        text = "You are in" + "\nBeacon 9 Area";
                         //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.blueberrygradient);
                     } else if (beaconDetails.getBeaconName().equals("suhail-ice")) {
-                        text = "You are in" + "\nMarshmallow Area";
+                        text = "You are in" + "\nBeacon 8 Area";
                         //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icegradient);
-                    } else {
-                        text = "You are in" + "\nMint Area";
+                    } else if (beaconDetails.getBeaconName().equals("Beacon A")){
+                        text = "You are in" + "\nBeacon 1 Area";
                         //background = ContextCompat.getDrawable(getApplication(), R.drawable.mintgradient);
+                    } else if (beaconDetails.getBeaconName().equals("Beacon B")){
+                        text = "You are in" + "\nBeacon 3 Area";
+                    } else if (beaconDetails.getBeaconName().equals("Beacon C")){
+                        text = "You are in" + "\nBeacon 5 Area";
+                    } else if (beaconDetails.getBeaconName().equals("Beacon D")){
+                        text = "You are in" + "\nBeacon 6 Area";
+                    } else if (beaconDetails.getBeaconName().equals("Beacon E")){
+                        text = "You are in" + "\nBeacon 10 Area";
+                    } else if (beaconDetails.getBeaconName().equals("Beacon F")){
+                        text = "You are in" + "\nBeacon 11 Area";
                     }
                 } else {
                     text = "You are\nOut of range";
@@ -205,6 +254,20 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnProduct){
+            if(!productList.isEmpty()){
+                Intent productIntent = new Intent(Main.this, ProductList.class);
+                productIntent.putStringArrayListExtra("productList", productList);
+                startActivity(productIntent);
+            }else {
+                Toast.makeText(getApplicationContext(),  "No Product(s) Received",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 
@@ -315,6 +378,10 @@ public class Main extends AppCompatActivity {
                                 relatedProduct.add(advertisersData.getProductName());
                             }
                         }
+
+                        if(!productList.contains(advertisersData.getProductName()))
+                            productList.add(advertisersData.getProductName());
+
                         relatedReff.add(advertisersData);
                     }
 
