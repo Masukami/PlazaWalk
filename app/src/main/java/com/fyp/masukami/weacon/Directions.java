@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,7 +36,7 @@ public class Directions extends AppCompatActivity {
     MyApplication app;
     private boolean isConnected;
     public WifiManager wifiManager;
-
+    private String currentIP = "";
 //    Change of mind. Use monitoring for advertising
 //    private final Region iceRegion = new Region("Ice Beacon", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 41073, 32690); //Beacon 8
 //    private final Region blueberryRegion = new Region("Blueberry Beacon", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 63797, 8827); //Beacon 9
@@ -43,6 +44,7 @@ public class Directions extends AppCompatActivity {
     private BeaconManager beaconManager;
     private ProximityContentManager proximityContentManager;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +85,13 @@ public class Directions extends AppCompatActivity {
                                 .load(app.ipAddress + advertiser.getPathwayImage()[3])
                                 .into(ivDirection);
                     }
-                } else {
-                    //Check for routers
-
+                }else if (isConnected){
+                    currentIP = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+                    int router = getRouters(currentIP.charAt(10));
+                    Glide.with(Directions.this)
+                            .load(app.ipAddress + advertiser.getPathwayImage()[router])
+                            .into(ivDirection);
+                }else{
                     Glide.with(Directions.this)
                             .load(app.ipAddress + "plazawalk/advertisers/directionOOR.png")
                             .into(ivDirection);
@@ -135,6 +141,29 @@ public class Directions extends AppCompatActivity {
 //                }
 //            }
 //        });
+    }
+
+    private int getRouters(char ip) {
+        int router = 0;
+
+        if (ip == '1')
+            router = 1;
+        else if (ip == '2')
+            router = 2;
+        else if (ip == '3')
+            router = 3;
+        else if (ip == '4')
+            router = 4;
+        else if (ip == '5')
+            router = 5;
+        else if (ip == '6')
+            router = 6;
+        else if (ip == '7')
+            router = 7;
+        else if (ip == '8')
+            router = 8;
+
+        return router;
     }
 
     @SuppressWarnings("deprecation")

@@ -56,6 +56,7 @@ FloorplanFragment.OnFragmentInteractionListener, PromotionFragment.OnFragmentInt
         btnDirection.setOnClickListener(this);
 
         Glide.with(this).load(app.ipAddress + advertiser.getLogo())
+                .thumbnail(1.5f)
                 .into(ivBanner);
 
     }
