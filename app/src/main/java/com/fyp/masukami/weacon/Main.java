@@ -207,14 +207,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
 
         proximityContentManager = new ProximityContentManager(this,
                 Arrays.asList(
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 39324, 29378),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 48201, 32369),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 56450, 55624),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 15237, 17187),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 24024, 52596),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 49483, 6190),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827),
-                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 41073, 32690)),
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 48201, 32369), //suhail-candyfloss
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 63797, 8827), //suhail-blueberry
+                        new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", 41073, 32690)), //suhail-ice
                 new EstimoteCloudBeaconDetailsFactory());
 
         proximityContentManager.setListener(new ProximityContentManager.Listener() {
@@ -234,7 +229,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                         text = "You are in" + "\nBeacon 8 Area";
                     } else if (beaconDetails.getBeaconName().equals("Beacon A")){
                         text = "You are in" + "\nBeacon 1 Area";
-                    } else if (beaconDetails.getBeaconName().equals("Beacon B")){
+                    } else if (beaconDetails.getBeaconName().equals("suhail-candyfloss")){
                         text = "You are in" + "\nBeacon 3 Area";
                     } else if (beaconDetails.getBeaconName().equals("Beacon C")){
                         text = "You are in" + "\nBeacon 5 Area";
