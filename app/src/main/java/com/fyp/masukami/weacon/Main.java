@@ -248,6 +248,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 } else if (isConnected){
                     currentIP = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
                     text = "You are in " + getRouters(currentIP.charAt(10)) + " Area";
+                    Log.d("Main", "Current IP " + currentIP);
                     nearbyStores.setVisibility(View.VISIBLE);
                     relatedStoresLayout.setVisibility(View.GONE);
                     viewProduct.setVisibility(View.VISIBLE);
