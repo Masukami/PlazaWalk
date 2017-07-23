@@ -152,6 +152,7 @@ public class ProductShops extends AppCompatActivity {
                         advertisersData.pathwayImage[9] = jsonData.getString("pathway_image10");
                         advertisersData.pathwayImage[10] = jsonData.getString("pathway_image11");
                         advertisersData.pathwayImage[11] = jsonData.getString("pathway_image12");
+                        advertisersData.setPromotion(jsonData.getString("promotion_image"));
 
                         if (advertisersData.getProductName().equals(product))
                             advertisers.add(advertisersData);
