@@ -22,7 +22,7 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private Context context;
     private LayoutInflater inflater;
     List<Advertisers> data = Collections.emptyList();
-    private final String ipAddress = "http://192.168.1.176/";
+    private final String ipAddress = "http://192.168.1.217/";
     private Typeface SansSemiBold, SansRegular;
     //Create constructor to initialize context and data sent from Main Activity
 
@@ -54,8 +54,6 @@ public class AdapterShop extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             myHolder.shopLocation.setText("Location : " + current.getAddress());
             Glide.with(context).load(ipAddress + current.getLogo())
                     .thumbnail(0.5f)
-                    .placeholder(R.drawable.shoplogoplaceholder)
-                    .error(R.drawable.ic_alert_box)
                     .into(myHolder.shopLogo);
         }else{
             Log.d("AdapterShop", "Advertisers data is empty");

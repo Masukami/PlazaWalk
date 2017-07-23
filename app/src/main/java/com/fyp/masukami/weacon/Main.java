@@ -1,13 +1,19 @@
 package com.fyp.masukami.weacon;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +59,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     private LinearLayout relatedStoresLayout;
     private ArrayList<String> productList = new ArrayList<>();
     private Button viewProduct;
-
+    private static final Map<String, List<String>> PLACES_BY_ROUTERS;
+    public WifiManager wifiManager;
+    private String currentIP = "";
+    private boolean isConnected;
+    private WifiReceiverMain wifiReceiver;
     MyApplication app;
 
     //Beacon
@@ -107,6 +117,62 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
     }
 
+    static {
+        Map<String, List<String>> placesByRouters = new HashMap<>();
+        placesByRouters.put("Router A", new ArrayList<String>(){
+            {
+                add("Auntie Anne's Pretzels");
+                add("Nando's");
+                add("Baskin Robbins");
+            }
+        });
+        placesByRouters.put("Router B", new ArrayList<String>(){
+            {
+                add("Baskin Robbins");
+                add("Auntie Anne's Pretzels");
+                add("The Body Shop");
+            }
+        });
+        placesByRouters.put("Router C", new ArrayList<String>(){
+            {
+                add("Uniqlo");
+                add("The Body Shop");
+            }
+        });
+        placesByRouters.put("Router D", new ArrayList<String>(){
+            {
+                add("Bonia");
+                add("Caring Pharmacy");
+                add("Nando's");
+            }
+        });
+        placesByRouters.put("Router E", new ArrayList<String>(){
+            {
+                add("myNEWS.com");
+            }
+        });
+        placesByRouters.put("Router F", new ArrayList<String>(){
+            {
+                add("Levi's");
+                add("H&M");
+            }
+        });
+        placesByRouters.put("Router G", new ArrayList<String>(){
+            {
+                add("H&M");
+                add("Levi's");
+            }
+        });
+        placesByRouters.put("Router H", new ArrayList<String>(){
+            {
+                add("myNEWS.com");
+                add("H&M");
+            }
+        });
+
+        PLACES_BY_ROUTERS = Collections.unmodifiableMap(placesByRouters);
+    }
+
     private List<String> placesNearBeacon(Beacon beacon) {
         String beaconKey = String.format("%d:%d", beacon.getMajor(), beacon.getMinor());
         if (PLACES_BY_BEACONS.containsKey(beaconKey))
@@ -114,12 +180,23 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         return Collections.emptyList();
     }
 
+    private List<String> placesNearRouter(String routerName) {
+        if (PLACES_BY_ROUTERS.containsKey(routerName))
+            return PLACES_BY_ROUTERS.get(routerName);
+        return Collections.emptyList();
+    }
+
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         beaconManager = new BeaconManager(this);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        wifiReceiver = new WifiReceiverMain(this);
+        checkWifi();
         app = (MyApplication) getApplication();
+        bleInRange = (TextView) findViewById(R.id.tvBLEinRange);
         nearbyStores = (RecyclerView) findViewById(R.id.advertisersList);
         relatedStores = (RecyclerView) findViewById(R.id.relatedList);
         relatedStoresLayout = (LinearLayout)findViewById(R.id.lowerLayout);
@@ -145,20 +222,18 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
             public void onContentChanged(Object content) {
                 String text = "";
                 Drawable background;
-                if (content != null) {
+                if (content != null && isConnected) {
                     nearbyStores.setVisibility(View.VISIBLE);
                     relatedStoresLayout.setVisibility(View.VISIBLE);
+                    viewProduct.setVisibility(View.VISIBLE);
                     emptyList.setVisibility(View.GONE);
                     EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
                     if (beaconDetails.getBeaconName().equals("suhail-blueberry")) {
                         text = "You are in" + "\nBeacon 9 Area";
-                        //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.blueberrygradient);
                     } else if (beaconDetails.getBeaconName().equals("suhail-ice")) {
                         text = "You are in" + "\nBeacon 8 Area";
-                        //background = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icegradient);
                     } else if (beaconDetails.getBeaconName().equals("Beacon A")){
                         text = "You are in" + "\nBeacon 1 Area";
-                        //background = ContextCompat.getDrawable(getApplication(), R.drawable.mintgradient);
                     } else if (beaconDetails.getBeaconName().equals("Beacon B")){
                         text = "You are in" + "\nBeacon 3 Area";
                     } else if (beaconDetails.getBeaconName().equals("Beacon C")){
@@ -170,14 +245,22 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                     } else if (beaconDetails.getBeaconName().equals("Beacon F")){
                         text = "You are in" + "\nBeacon 11 Area";
                     }
+                } else if (isConnected){
+                    currentIP = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+                    text = "You are in " + getRouters(currentIP.charAt(10)) + " Area";
+                    nearbyStores.setVisibility(View.VISIBLE);
+                    relatedStoresLayout.setVisibility(View.GONE);
+                    viewProduct.setVisibility(View.VISIBLE);
+                    emptyList.setVisibility(View.GONE);
+                    //background = ContextCompat.getDrawable(getApplication(), R.drawable.maingradient);
                 } else {
                     text = "You are\nOut of range";
                     nearbyStores.setVisibility(View.GONE);
                     relatedStoresLayout.setVisibility(View.GONE);
                     emptyList.setVisibility(View.VISIBLE);
-                    //background = ContextCompat.getDrawable(getApplication(), R.drawable.maingradient);
+                    viewProduct.setVisibility(View.GONE);
                 }
-                ((TextView) findViewById(R.id.tvBLEinRange)).setText(text);
+                bleInRange.setText(text);
 //                findViewById(R.id.upperLayout).setBackground(
 //                        background != null ? background : ContextCompat.getDrawable(getApplicationContext(), R.drawable.maingradient));
 
@@ -185,8 +268,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         });
 
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
-            ;
-
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
                 if (!list.isEmpty()) {
@@ -201,6 +282,65 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         });
 
         region = new Region("ranged region", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
+    }
+
+    @SuppressWarnings("deprecation")
+    public void checkWifi() {
+        ConnectivityManager connManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (netInfo.isConnected())
+            isConnected = true;
+        else
+            isConnected = false;
+    }
+
+    @SuppressWarnings("deprecation")
+    public void wifiChangeState(boolean connected){
+        String text = "";
+        if(connected){
+            currentIP = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+            text = "You are in " + getRouters(currentIP.charAt(10)) + " Area";
+            nearbyStores.setVisibility(View.VISIBLE);
+            relatedStoresLayout.setVisibility(View.VISIBLE);
+            viewProduct.setVisibility(View.VISIBLE);
+            emptyList.setVisibility(View.GONE);
+        }else{
+            text = "You are\nOut of range";
+//            nearbyStores.setVisibility(View.GONE);
+//            relatedStoresLayout.setVisibility(View.GONE);
+//            emptyList.setVisibility(View.VISIBLE);
+//            viewProduct.setVisibility(View.GONE);
+        }
+        bleInRange.setText(text);
+    }
+
+    private String getRouters(char ip) {
+        String routerName = "";
+
+        if (ip == '1')
+            routerName = "Router A";
+        else if (ip == '2')
+            routerName = "Router B";
+        else if (ip == '3')
+            routerName = "Router C";
+        else if (ip == '4')
+            routerName = "Router D";
+        else if (ip == '5')
+            routerName = "Router E";
+        else if (ip == '6')
+            routerName = "Router F";
+        else if (ip == '7')
+            routerName = "Router G";
+        else if (ip == '8')
+            routerName = "Router H";
+
+        List<String> places = placesNearRouter(routerName);
+        if (nearbies.isEmpty() || !nearbies.equals(places)) {
+            nearbies = places;
+            new AsyncFetch().execute();
+        }
+
+        return routerName;
     }
 
     private void setFontFace() {
@@ -371,6 +511,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                         advertisersData.pathwayImage[9] = jsonData.getString("pathway_image10");
                         advertisersData.pathwayImage[10] = jsonData.getString("pathway_image11");
                         advertisersData.pathwayImage[11] = jsonData.getString("pathway_image12");
+                        advertisersData.setPromotion(jsonData.getString("promotion_image"));
 
                         for (int j = 0; j < nearbies.size(); j++) {
                             if (jsonName.equals(nearbies.get(j))) {
@@ -395,8 +536,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                             } else if (currentProductName.equals("Clothing") || currentProductName.equals("Leather Goods")) {
                                 if (relatedProduct.contains("Clothing") || relatedProduct.contains("Leather Goods"))
                                     relatedAdvertisers.add(relatedReff.get(k));
-                            } else if (currentProductName.equals("Health Suppliments") || currentProductName.equals("Convenience Shop") || currentProductName.equals("Cosmetics")) {
-                                if (relatedProduct.contains("Health Suppliments") || relatedProduct.contains("Convenience Shop") || relatedProduct.contains("Cosmetics"))
+                            } else if (currentProductName.equals("Health Supplements") || currentProductName.equals("Convenience Shop") || currentProductName.equals("Cosmetics")) {
+                                if (relatedProduct.contains("Health Supplements") || relatedProduct.contains("Convenience Shop") || relatedProduct.contains("Cosmetics"))
                                     relatedAdvertisers.add(relatedReff.get(k));
                             }
                         }

@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
  */
 
 public class AdvertiserDetails extends AppCompatActivity implements View.OnClickListener, DescriptionFragment.OnFragmentInteractionListener,
-FloorplanFragment.OnFragmentInteractionListener{
+FloorplanFragment.OnFragmentInteractionListener, PromotionFragment.OnFragmentInteractionListener{
 
     Advertisers advertiser;
     TextView tvName, tvProduct, tvLocation;
@@ -56,9 +56,6 @@ FloorplanFragment.OnFragmentInteractionListener{
         btnDirection.setOnClickListener(this);
 
         Glide.with(this).load(app.ipAddress + advertiser.getLogo())
-                .override(600,150)
-                .placeholder(R.drawable.ic_alert_box)
-                .error(R.drawable.ic_alert_box)
                 .into(ivBanner);
 
     }
@@ -77,8 +74,14 @@ FloorplanFragment.OnFragmentInteractionListener{
         FloorplanFragment floorplanFragment = new FloorplanFragment();
         floorplanFragment.setArguments(bundleAddress);
 
+        Bundle bundlePromotion = new Bundle();
+        bundlePromotion.putString("promotion", advertiser.getPromotion());
+        PromotionFragment promotionFragment = new PromotionFragment();
+        promotionFragment.setArguments(bundlePromotion);
+
         adapter.addFragment(descFragment, "Description");
         adapter.addFragment(floorplanFragment, "Floor Plan");
+        adapter.addFragment(promotionFragment, "Promotion");
         viewPager.setAdapter(adapter);
     }
 

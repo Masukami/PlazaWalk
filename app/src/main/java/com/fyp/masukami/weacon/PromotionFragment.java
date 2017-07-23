@@ -14,14 +14,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 
-public class FloorplanFragment extends Fragment {
+/**
+ * Created by suhai on 7/21/2017.
+ */
 
-    private OnFragmentInteractionListener mListener;
-    private String floor;
+public class PromotionFragment extends Fragment {
+
+    private PromotionFragment.OnFragmentInteractionListener mListener;
     private final String ipAddress = "http://192.168.1.217/";
-    private ImageView ivFloorPlan;
-    private String address;
-    public FloorplanFragment() {
+    private ImageView ivPromotion;
+    private String promotionImage;
+    public PromotionFragment() {
         // Required empty public constructor
     }
 
@@ -29,9 +32,9 @@ public class FloorplanFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            Bundle bundleAddress = getArguments();
-            if (bundleAddress != null)
-                address = getArguments().getString("address");
+            Bundle bundlePromotion = getArguments();
+            if (bundlePromotion != null)
+                promotionImage = getArguments().getString("promotion");
         }
     }
 
@@ -39,28 +42,24 @@ public class FloorplanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_floorplan, container, false);
-        ivFloorPlan = (ImageView)view.findViewById(R.id.ivFloorPlan);
-        floor = address.substring(7, 13);
+        View view = inflater.inflate(R.layout.fragment_promotion, container, false);
+        ivPromotion = (ImageView)view.findViewById(R.id.ivPromotion);
 
-        if(floor.equals("First ")){
-            Glide.with(this)
-                    .load(ipAddress + "plazawalk/advertisers/firstfloor.png")
-                    .into(ivFloorPlan);
-        }else if (floor.equals("Ground")){
-            Glide.with(this)
-                    .load(ipAddress + "plazawalk/advertisers/groundfloor.png")
-                    .into(ivFloorPlan);
-        }
+        Glide.with(this)
+                .load(ipAddress + promotionImage)
+                .into(ivPromotion);
 
         final ImagePopup imagePopup = new ImagePopup(getContext());
+        imagePopup.setWindowHeight(650);
+        imagePopup.setWindowWidth(450);
+        imagePopup.setBackgroundColor(Color.argb(50,255,255,255));
         imagePopup.setHideCloseIcon(true);
         imagePopup.setImageOnClickClose(true);
 
-        ivFloorPlan.setOnClickListener(new View.OnClickListener() {
+        ivPromotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagePopup.initiatePopup(ivFloorPlan.getDrawable());
+                imagePopup.initiatePopup(ivPromotion.getDrawable());
             }
         });
 
@@ -77,8 +76,8 @@ public class FloorplanFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof PromotionFragment.OnFragmentInteractionListener) {
+            mListener = (PromotionFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

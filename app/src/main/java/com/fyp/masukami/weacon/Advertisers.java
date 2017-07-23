@@ -15,18 +15,28 @@ public class Advertisers implements Serializable{
     private String address;
     public String[] pathwayImage = new String[12];
     private String logo;
+    private String promotion;
 
     public Advertisers() {
 
     }
 
-    public Advertisers(String name, String productName, String description, String address, String[] pathwayImage, String logo) {
+    public Advertisers(String name, String productName, String description, String address, String[] pathwayImage, String logo, String promotion) {
         this.name = name;
         this.productName = productName;
         this.description = description;
         this.address = address;
         this.pathwayImage = pathwayImage;
         this.logo = logo;
+        this.promotion = promotion;
+    }
+
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
     }
 
     public String getName() {

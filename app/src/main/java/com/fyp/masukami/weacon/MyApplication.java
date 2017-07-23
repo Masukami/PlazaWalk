@@ -4,10 +4,14 @@ import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -24,18 +28,18 @@ import java.util.UUID;
 
 public class MyApplication extends Application {
 
-    public final String ipAddress = "http://192.168.1.176/";
+    public final String ipAddress = "http://192.168.1.217/";
     private AssetManager am;
     private BeaconManager beaconManager;
     public Typeface BebasBold, BebasBook, BebasLight, BebasRegular, SansBlack, SansRegular, SansSemiBold;
     private Region blueBerry, iceMarshmallow, beetrootA, candyFlossB, candyFlossD, mintCocktailC, beetrootE, blueberryF;
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate() {
         super.onCreate();
         am = getApplicationContext().getAssets();
         beaconManager = new BeaconManager(getApplicationContext());
-
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
@@ -54,7 +58,6 @@ public class MyApplication extends Application {
                 // could add an "exit" notification too if you want (-:
             }
         });
-
         initializeRegion();
         startMonitoring();
         initializeFonts();
@@ -70,8 +73,6 @@ public class MyApplication extends Application {
         candyFlossD = new Region("Beacon D", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 15237, 17187); //Beacon 6
         beetrootE = new Region("Beacon E", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 24024, 52596);//Beacon 10
         blueberryF = new Region("Beacon F", UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), 49483, 6190);//Beacon11
-
-
     }
 
     public void stopMonitoring() {
@@ -128,7 +129,6 @@ public class MyApplication extends Application {
         notificationManager.notify(1, notification);
     }
 
-
     private void initializeFonts() {
         BebasBold = Typeface.createFromAsset(am, String.format(Locale.US, "fonts/%s", "BebasNeue_Bold.ttf"));
         BebasBook = Typeface.createFromAsset(am, String.format(Locale.US, "fonts/%s", "BebasNeue_Book.ttf"));
@@ -138,6 +138,4 @@ public class MyApplication extends Application {
         SansRegular = Typeface.createFromAsset(am, String.format(Locale.US, "fonts/%s", "SourceSansPro-Regular.otf"));
         SansSemiBold = Typeface.createFromAsset(am, String.format(Locale.US, "fonts/%s", "SourceSansPro-Semibold.otf"));
     }
-
-
 }
